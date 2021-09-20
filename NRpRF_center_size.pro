@@ -1,7 +1,13 @@
 pro NRpRF_center_size
 
+  ;+
+  ; :Author: Wouter Schellekens
+  ;
+  ; Non-rigid pRF center & size calculation
+  ;-
+  
   ;Declare variables
-  rdir='/Fridge/users/wouter/WholeBodyMap/'
+  rdir='/Fridge/users/wouter/NRPRF/'
   fsdir='/Fridge/users/wouter/fs/avg_wbm/'
   surfdir=fsdir+'surf/caret2/'
   subs=['V6649','V6682','V6683','V6743','V6744','V7774','V7860','V7882']
