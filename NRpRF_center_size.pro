@@ -47,10 +47,7 @@ pro NRpRF_center_size
       if n_elements(where(zfitz2[ii,*] eq max(zfitz2[ii,*]),/null)) eq 1 then begin
         centerpos[ii]=where(zfitz2[ii,*] eq max(zfitz2[ii,*]))
       endif else begin
-        tmp=where(zfitz2[ii,*] eq max(zfitz2[ii,*]))
-        tmp2=dblarr(n_elements(tmp))
-        for jj=0,n_elements(tmp)-1 do for kk=-1,1,2 do if tmp[jj]+kk ge 0 and tmp[jj]+kk lt nconds then if zfitz2[ii,tmp[jj]+kk] gt tmp2[jj] then tmp2[jj]=zfitz2[ii,tmp[jj]+kk]
-        centerpos[ii]=tmp[where(tmp2 eq max(tmp2))]
+        centerpos[ii]=round(mean(where(zfitz2[ii,*] eq max(zfitz2[ii,*]))))
       endelse
     endif
 
