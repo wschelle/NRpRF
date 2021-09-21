@@ -9,21 +9,13 @@ pro NRpRF_center_size
   ;Declare variables
   rdir='/Fridge/users/wouter/NRPRF/'
   fsdir='/Fridge/users/wouter/fs/avg_wbm/'
-  surfdir=fsdir+'surf/caret2/'
+  surfdir=fsdir+'surf/caret/'
   subs=['V6649','V6682','V6683','V6743','V6744','V7774','V7860','V7882']
   nsub=n_elements(subs)
   nconds=18.
-  condities = ['toes', 'ankle', 'knee', 'belly', 'shoulder', 'elbow','wrist', 'littleF', 'ringF', 'middleF', 'indexF', 'thumb', 'forehead', 'eye', 'nose', 'lips', 'jaw', 'tongue']
+  condities = ['toes', 'ankle', 'knee', 'abdomen', 'shoulder', 'elbow','wrist', 'littleF', 'ringF', 'middleF', 'indexF', 'thumb', 'forehead', 'eye', 'nose', 'lips', 'jaw', 'tongue']
   nscans=856.
-  
-  ;Define the static Gaussian function
-  step=100.
   gcenter=10.
-  gsigma=1.
-  xax=findgen(gcenter*step)/step
-  p0=[0.,1.,gsigma,gcenter]
-  gf=gauss1d(xax,p0)
-  xr=n_elements(gf)
   
   ;Load pRF fits
   for i=0,nsub-1 do begin

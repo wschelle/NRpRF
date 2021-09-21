@@ -59,7 +59,7 @@ nbz[where(finite(nb) eq 0)]=0
 cmat=dblarr(nsub,nlab,nconds,nconds)
 for h=0,nsub-1 do for i=0,nlab-1 do for j=0,nconds-1 do for k=0,nconds-1 do if (stddev(nbz[h,i,j,*]) ne 0 and stddev(nbz[h,i,k,*]) ne 0) then cmat[h,i,j,k]=correlate(reform(nbz[h,i,j,*]),reform(nbz[h,i,k,*]),/double)
 
-;Define the lower-bound cutoff at the 95% confidence interval for each ROI
+;Define the lower-bound threshold value at the 95% confidence interval for each ROI
 tmp=cmat
 thres=dblarr(nlab)
 for i=0,nlab-1 do begin
@@ -170,26 +170,26 @@ for i=0,nlab-1 do modul[i,*,*]=modularity_louvain(reform(bcmats[i,*,*]),reform(t
 
 lname=['M1','S1','SMA','PMd','PMv','Ins','iPC','sPC']
 cname=['Toe','Ank','Kne','Abd','Sho','Elb','Wri','LiF','RiF','MiF','InF','Thu','For','Eye','Nos','Lip','Jaw','Ton']
-tits=strarr(nlab-1,nconds)
-for i=0,nlab-1 do for j=0,nconds-1 do tits[i,j]=lname[i]+'-'+cname[j]
+titles=strarr(nlab-1,nconds)
+for i=0,nlab-1 do for j=0,nconds-1 do titles[i,j]=lname[i]+'-'+cname[j]
 
 ;output graph theory metrics
 graphw=strarr((nlab-1)*nconds,nsub+1)
-graphw[*,0]=reform(tits,(nlab-1)*nconds)
+graphw[*,0]=reform(titles,(nlab-1)*nconds)
 tmp=transpose(S,[1,2,0])
 graphw[*,1:*]=string(reform(tmp[0:nlab-1,*,*],(nlab-1)*nconds,nsub))
 write_ascii,rdir+'group/graph-connectivity.txt',strcompress(graphw,/remove_all)
 save,S,filename=rdir+'group/graph-connectivity.sav'
 
 graphw=strarr((nlab-1)*nconds,nsub+1)
-graphw[*,0]=reform(tits,(nlab-1)*nconds)
+graphw[*,0]=reform(titles,(nlab-1)*nconds)
 tmp=transpose(bc,[1,2,0])
 graphw[*,1:*]=string(reform(tmp[0:nlab-1,*,*],(nlab-1)*nconds,nsub))
 write_ascii,rdir+'group/graph-betweennesscentrality.txt',strcompress(graphw,/remove_all)
 save,bc,filename=rdir+'group/graph-betweennesscentrality.sav'
 
 graphw=strarr((nlab-1)*nconds,nsub+1)
-graphw[*,0]=reform(tits,(nlab-1)*nconds)
+graphw[*,0]=reform(titles,(nlab-1)*nconds)
 tmp=transpose(wcc,[1,2,0])
 graphw[*,1:*]=string(reform(tmp[0:nlab-1,*,*],(nlab-1)*nconds,nsub))
 write_ascii,rdir+'group/graph-clustering.txt',strcompress(graphw,/remove_all)

@@ -6,7 +6,6 @@ pro NRpRF_fitting
 ;-
 
 ;*****Declare variables*****
-.reset_session
 subs=['V6649','V6682','V6683','V6743','V6744','V7774','V7860','V7882']
 nsubs=n_elements(subs)
 funrs=['1','2','3','4']
@@ -72,9 +71,11 @@ for ii=0,nsubs-1 do begin
   mask=intarr(nrnodes)
   mask(where(mean(funx,dimension=2) gt 10))=1
 
-  ;High-pass filtering + scaling to percent signal change.
+  ;Create high-pass filter using a discrete set of cosines with a cut-off at 0.01Hz
   nrfilters = floor(2*(nscans*(scandur/1000.)*0.01));
   filtermatrix=make_filter(nrfilters,nscans)
+  
+  ;Add additional regressors for the different runs
   sesfactor=fltarr(1,nscans)
   sesfactor[0,0:nscans1-1]=1
   filtermatrix=[filtermatrix,sesfactor]
@@ -85,7 +86,8 @@ for ii=0,nsubs-1 do begin
   sesfactor[0,2*nscans1:2*nscans1+nscans4-1]=1
   filtermatrix=[filtermatrix,sesfactor]
   delvar,sesfactor
-
+  
+  ;High-pass filtering of timeseries using linear regression + scaling to percent signal change
   for i=0L,nrnodes-1 do if mask[i] ne 0 then begin
     b=regress(filtermatrix,reform(funx[i,*]),yfit=yfit,const=const,/double)
     funx[i,*]=(funx[i,*]-yfit)/const*100.
@@ -154,7 +156,7 @@ for ii=0,nsubs-1 do begin
   for i=0,35 do fmat[ti5[1,i]-1,ti5[0,i]]=1
   for i=0,35 do fmat[ti5[1,i]-1,ti5[0,i]+1000]=1
 
-  ;Convolve binary design matrix with canonical HRF and interpolate temporal domain from ms to scans.
+  ;Convolve binary design matrix with canonical HRF and interpolate across temporal domain from ms to scans.
   cfmat=bconv(fmat)
   fmatrix=fltarr(nconds,nscans)
   for i=0,nconds-1 do fmatrix[i,*]=interpol(cfmat[i,*],nscans,/spline)
@@ -171,7 +173,7 @@ for ii=0,nsubs-1 do begin
     cmrsq[i]=mcor^2.
   end
   
-  ;normalize the regression coefficients to max=1
+  ;normalize the regression coefficients
   nreg=regord
   for i=0L,nrnodes-1 do if mask[i] eq 1 then nreg[i,*]/=max(regord[i,*])
 
